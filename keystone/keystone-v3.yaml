@@ -11,6 +11,23 @@ servers:
   - url: "http://devstack.local/identity"
     description: "Development server"
 paths:
+  /v3:
+    get:
+      summary: |
+        The index page.
+      operationId:
+        "index"
+      responses:
+        "200":
+          description: ""
+          content:
+            # TODO: Add JSON-home schema
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Index"
+              examples:
+                example1:
+                  $ref: "#/components/examples/Index"
   /v3/auth/tokens:
     post:
       summary: |
@@ -62,6 +79,46 @@ paths:
 #            $ref: "#/components/schemas/ErrorConflict"
 components:
   schemas:
+    Index:
+      type: "object"
+      properties:
+        version:
+          type: "object"
+          properties:
+            id:
+              description: ""
+              type: "string"
+            status:
+              description: ""
+              type: "string"
+            updated:
+              description: ""
+              type: "string"
+              format: "date-time"
+            links:
+              description: ""
+              type: "array"
+              items:
+                type: "object"
+                properties:
+                  rel:
+                    description: ""
+                    type: "string"
+                  href:
+                    description: ""
+                    type: "string"
+            media-types:
+              description: ""
+              type: "array"
+              items:
+                type: "object"
+                properties:
+                  base:
+                    description: ""
+                    type: "string"
+                  type:
+                    description: ""
+                    type: "string"
     AuthenticationRequestApplicationCredential:
       type: "object"
       required: ["auth"]
@@ -291,6 +348,27 @@ components:
 #    ErrorNotFound:
 #    ErrorConflict:
   examples:
+    Index:
+      value: |
+        {
+          "version":{
+            "id":"v3.14",
+            "status":"stable",
+            "updated":"2020-04-07T00:00:00Z",
+            "links":[
+              {
+                "rel":"self",
+                "href":"http://10.0.109.180/identity/v3/"
+              }
+            ],
+            "media-types":[
+              {
+                "base":"application/json",
+                "type":"application/vnd.openstack.identity-v3+json"
+              }
+            ]
+          }
+        }
     AuthenticationRequestApplicationCredential:
       value: |
         {
