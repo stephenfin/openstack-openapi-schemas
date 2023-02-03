@@ -1,0 +1,13 @@
+{
+  "auth": {
+    "identity": {
+      "methods": [
+        "application_credential"
+      ],
+      "application_credential": {
+        "id": "f37a55af0c3a459ca410f6a283357210",
+        "secret": "hIICOxW_IKR0sCBTLIADMg1nGVgkS2IxKLCXqZWOn89HmA9i1cdfM2GbE0osBT4O6gzeWXy7DmXy6zFror-XJw"
+      }
+    }
+  }
+}

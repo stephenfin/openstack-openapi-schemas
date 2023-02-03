@@ -1,0 +1,163 @@
+{
+  "token": {
+    "application_credential": {
+      "id": "f37a55af0c3a459ca410f6a283357210",
+      "name": "foo",
+      "restricted": true
+    },
+    "audit_ids": [
+      "93Y7aBTgTE6aPXdSPoblsA"
+    ],
+    "catalog": [
+      {
+        "endpoints": [
+          {
+            "id": "f6e6d315f6444207ad9354616684bb39",
+            "interface": "public",
+            "region": "RegionOne",
+            "region_id": "RegionOne",
+            "url": "http://10.0.109.180:9696/networking"
+          }
+        ],
+        "id": "041f4db5a2864763b29419de4157d592",
+        "name": "neutron",
+        "type": "network"
+      },
+      {
+        "endpoints": [
+          {
+            "id": "a45ed897f6fc405ca42ba7b02e8f138f",
+            "interface": "public",
+            "region": "RegionOne",
+            "region_id": "RegionOne",
+            "url": "http://10.0.109.180/volume/v3/c4fdc1bcf30541048ca086d7332a57e3"
+          }
+        ],
+        "id": "0e94ae9a5f0f41458730fbe7bb3578ba",
+        "name": "cinderv3",
+        "type": "volumev3"
+      },
+      {
+        "endpoints": [
+          {
+            "id": "90ac2e91cb3549ad903c914ca0125a71",
+            "interface": "public",
+            "region": "RegionOne",
+            "region_id": "RegionOne",
+            "url": "http://10.0.109.180/compute/v2.1"
+          }
+        ],
+        "id": "1262eac56082465da36c511b97d38bf8",
+        "name": "nova",
+        "type": "compute"
+      },
+      {
+        "endpoints": [
+          {
+            "id": "a2307a71d5fa4541ba0e646f2b05c9cc",
+            "interface": "public",
+            "region": "RegionOne",
+            "region_id": "RegionOne",
+            "url": "http://10.0.109.180/image"
+          }
+        ],
+        "id": "38552604a83547549e96c806906bd071",
+        "name": "glance",
+        "type": "image"
+      },
+      {
+        "endpoints": [
+          {
+            "id": "8b9b144aef0a4bc7b4cb22c470fa8e95",
+            "interface": "public",
+            "region": "RegionOne",
+            "region_id": "RegionOne",
+            "url": "http://10.0.109.180/identity"
+          }
+        ],
+        "id": "4356b139a24946da96c9ddfbeeb55cb2",
+        "name": "keystone",
+        "type": "identity"
+      },
+      {
+        "endpoints": [
+          {
+            "id": "4247127ca99f4918bb2f53e4941b3e4e",
+            "interface": "public",
+            "region": "RegionOne",
+            "region_id": "RegionOne",
+            "url": "http://10.0.109.180/placement"
+          }
+        ],
+        "id": "6e24df7c539a46108e5262f1615f7896",
+        "name": "placement",
+        "type": "placement"
+      },
+      {
+        "endpoints": [
+          {
+            "id": "9dddbeec832449418a5a5304df4c6d93",
+            "interface": "public",
+            "region": "RegionOne",
+            "region_id": "RegionOne",
+            "url": "http://10.0.109.180/volume/v3/c4fdc1bcf30541048ca086d7332a57e3"
+          }
+        ],
+        "id": "e0ec48cd346f42aab1e78efe71069e47",
+        "name": "cinder",
+        "type": "block-storage"
+      },
+      {
+        "endpoints": [
+          {
+            "id": "128c38804b68438b9dc3ca8336d69971",
+            "interface": "public",
+            "region": "RegionOne",
+            "region_id": "RegionOne",
+            "url": "http://10.0.109.180/compute/v2/c4fdc1bcf30541048ca086d7332a57e3"
+          }
+        ],
+        "id": "eaf662f1b7b04371baa25d7811499daa",
+        "name": "nova_legacy",
+        "type": "compute_legacy"
+      }
+    ],
+    "expires_at": "2023-02-03T17:18:11.000000Z",
+    "is_domain": false,
+    "issued_at": "2023-02-03T16:18:11.000000Z",
+    "methods": [
+      "application_credential"
+    ],
+    "project": {
+      "domain": {
+        "id": "default",
+        "name": "Default"
+      },
+      "id": "c4fdc1bcf30541048ca086d7332a57e3",
+      "name": "admin"
+    },
+    "roles": [
+      {
+        "id": "18b3d3f63c5f4fb38d756150433ca241",
+        "name": "member"
+      },
+      {
+        "id": "6ffbd857e5e7470e97be9cb055a45090",
+        "name": "admin"
+      },
+      {
+        "id": "a3b762611a9c48259ed704da155a6a0c",
+        "name": "reader"
+      }
+    ],
+    "user": {
+      "domain": {
+        "id": "default",
+        "name": "Default"
+      },
+      "id": "e81a2d7a033642beae9932ba28f176b8",
+      "name": "admin",
+      "password_expires_at": null
+    }
+  }
+}
