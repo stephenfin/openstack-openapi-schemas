@@ -1,0 +1,370 @@
+openapi: "3.1.0"
+info:
+  version: "3.14"
+  title: "OpenStack Identity (Keystone)"
+  description: |
+    The OpenStack Identity (Keystone) API.
+  license:
+    name: "Apache 2.0"
+    url: "https://www.apache.org/licenses/LICENSE-2.0.html"
+servers:
+  - url: "http://devstack.local/identity"
+    description: "Development server"
+paths:
+  /v3/auth/tokens:
+    post:
+      summary: |
+        Authenticate a user. The authentication method used is determined by the request body.
+      operationId:
+        "authenticateUser"
+      requestBody:
+        description: |
+          Authentication parameters.
+        required: true
+        content:
+          application/json:
+            schema:
+              # TODO: This should use oneOf once we support an additional auth type
+              $ref: "#/components/schemas/AuthenticationRequestApplicationCredential"
+            examples:
+              example1:
+                $ref: "#/components/examples/AuthenticationRequestApplicationCredential"
+      responses:
+        "200":
+          description: ""
+          headers:
+            X-Subject-Token:
+              description: |
+                The authentication token. An authentication response returns the token ID in this
+                header rather than in the response body.
+              schema:
+                type: "string"
+            X-OpenStack-Request-Id:
+              description: ""
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthenticationResponse"
+              examples:
+                example1:
+                  $ref: "#/components/examples/AuthenticationResponse"
+#          "400":
+#            $ref: "#/components/schemas/ErrorBadRequest"
+#          "401":
+#            $ref: "#/components/schemas/ErrorUnauthorized"
+#          "403":
+#            $ref: "#/components/schemas/ErrorForbidden"
+#          "404":
+#            $ref: "#/components/schemas/ErrorNotFound"
+#          "409":
+#            $ref: "#/components/schemas/ErrorConflict"
+components:
+  schemas:
+    AuthenticationRequestApplicationCredential:
+      type: "object"
+      required: ["auth"]
+      properties:
+        auth:
+          type: "object"
+          required: ["identity"]
+          properties:
+            identity:
+              description: "An `Identity` object."
+              type: "object"
+              properties:
+                methods:
+                  description: "The authentication method."
+                  type: "array"
+                  items:
+                    type: "string"
+                    enum:
+                      - "application_credential"
+                application_credential:
+                  description: "An `application_credential` object."
+                  type: "object"
+                  # additionalProperties: false
+                  oneOf:
+                    - type: "object"
+                      required: ["name", "secret", "user"]
+                      properties:
+                        name:
+                          description: |
+                            The name of the application credential used for authentication. If
+                            provided, must be accompanied by a user object.
+                          type: "string"
+                        secret:
+                          description: |
+                            The secret for authenticating the application credential.
+                          type: "string"
+                        user:
+                          description: |
+                            A `User` object, required if an application credential is identified by
+                            name and not ID.
+                          type: "object"
+                          required: ["id"]
+                          properties:
+                            id:
+                              type: "string"
+                    - type: "object"
+                      required: ["id", "secret"]
+                      properties:
+                        id:
+                          description: |
+                            The ID of the application credential used for authentication. If not
+                            provided, the application credential must be identified by its name and
+                            its owning user.
+                          type: "string"
+                        secret:
+                          description: "The secret for authenticating the application credential."
+                          type: "string"
+    AuthenticationResponse:
+      type: "object"
+      properties:
+        token:
+          description: "A `Token` object."
+          type: "object"
+          properties:
+            application_credential:
+              description: "The application credential used for the request."
+              type: "object"
+              properties:
+                id:
+                  description: "The ID of the `ApplicationCredential`."
+                  type: "string"
+                name:
+                  description: "The name of the `ApplicationCredential`."
+                  type: "string"
+                restricted:
+                  description: |
+                    Whether the application credential is permitted to be used for creating and deleting
+                    additional application credentials and trusts.
+                  type: "boolean"
+            audit_ids:
+              description: |
+                A list of one or two audit IDs. An audit ID is a unique, randomly generated,
+                URL-safe string that you can use to track a token. The first audit ID is the current
+                audit ID for the token. The second audit ID is present for only re-scoped tokens and
+                is the audit ID from the token before it was re-scoped. A re- scoped token is one
+                that was exchanged for another token of the same or different scope. You can use
+                these audit IDs to track the use of a token or chain of tokens across multiple
+                requests and endpoints without exposing the token ID to non-privileged users.
+              type: "array"
+              items:
+                type: "string"
+            catalog:
+              description: "A `Catalog` object."
+              type: "array"
+              items:
+                type: "object"
+                properties:
+                  endpoints:
+                    description: ""
+                    type: "array"
+                    items:
+                      type: "object"
+                      properties:
+                        id:
+                          description: ""
+                          type: "string"
+                        interface:
+                          description: ""
+                          type: "string"
+                        region:
+                          description: ""
+                          type: "string"
+                        region_id:
+                          description: ""
+                          type: "string"
+                        url:
+                          description: ""
+                          type: "string"
+                  id:
+                    description: ""
+                    type: "string"
+                  name:
+                    description: ""
+                    type: "string"
+                  type:
+                    description: ""
+                    type: "string"
+            expires_at:
+              description: |
+                The date and time when the token expires.
+
+                The date and time stamp format is ISO 8601:
+
+                    CCYY-MM-DDThh:mm:ss.sssZ
+
+                For example, `2015-08-27T09:49:58.000000Z`.
+
+                A `null` value indicates that the token never expires.
+              type: ["string", "null"]
+              format: "date-time"
+            is_domain:
+              description: "Indicates whether a project is acting as a domain."
+              type: "boolean"
+            issued_at:
+              description: |
+                The date and time when the token was issued.
+
+                The date and time stamp format is ISO 8601:
+
+                    CCYY-MM-DDThh:mm:ss.sssZ
+
+                For example, `2015-08-27T09:49:58.000000Z`.
+              type: "string"
+              format: "date-time"
+            methods:
+              description: |
+                The authentication methods, which are commonly `password`, `token`, or other methods.
+                Indicates the accumulated set of authentication methods that were used to obtain the
+                token. For example, if the token was obtained by `password` authentication, it
+                contains `password`. Later, if the token is exchanged by using the `token`
+                authentication method one or more times, the subsequently created tokens contain
+                both `password` and `token` in their methods attribute. Unlike multi-factor
+                authentication, the methods attribute merely indicates the methods that were used to
+                authenticate the user in exchange for a token. The client is responsible for
+                determining the total number of authentication factors.
+              type: "array"
+              items:
+                type: "string"
+            project:
+              description: "A `Project` object."
+              type: "object"
+              properties:
+                domain:
+                  description: "The domain of the `Project`."
+                  type: "object"
+                  properties:
+                    id:
+                      description: "The ID of the `Domain`."
+                      type: "string"
+                    name:
+                      description: "The name of the `Domain`."
+                      type: "string"
+                id:
+                  description: "The ID of the `Project`."
+                  type: "string"
+                name:
+                  description: "The name of the `Project`."
+                  type: "string"
+            roles:
+              description: "A list of `Role` objects."
+              type: "array"
+              items:
+                type: "object"
+                properties:
+                  id:
+                    description: "The ID of the `Role`."
+                    type: "string"
+                  name:
+                    description: "The name of the `Role`."
+                    type: "string"
+            user:
+              description: "A `User` object."
+              type: "object"
+              properties:
+                password_expires_at:
+                  type: ["string", "null"]
+                  format: "date-time"
+                domain:
+                  description: "The domain of the `User`."
+                  type: "object"
+                  properties:
+                    id:
+                      description: "The ID of the `Domain`."
+                      type: "string"
+                    name:
+                      description: "The name of the `Domain`."
+                      type: "string"
+                id:
+                  description: "The ID of the `User`."
+                  type: "string"
+                name:
+                  description: "The name of the `User`."
+                  type: "string"
+#    ErrorBadRequest:
+#    ErrorUnauthorized:
+#    ErrorForbidden:
+#    ErrorNotFound:
+#    ErrorConflict:
+  examples:
+    AuthenticationRequestApplicationCredential:
+      value: |
+        {
+          "auth": {
+            "identity": {
+              "methods": [
+                "application_credential"
+              ],
+              "application_credential": {
+                "id": "423f19a4ac1e4f48bbb4180756e6eb6c",
+                "secret": "rEaqvJka48mpv"
+              }
+            }
+          }
+        }
+    AuthenticationResponse:
+      value: |
+        {
+          "token":{
+            "is_domain":false,
+            "methods":[
+              "application_credential"
+            ],
+            "roles":[
+              {
+                "id":"df8b7e3bf6fb49e9ba19122da2bae916",
+                "name":"Member"
+              }
+            ],
+            "expires_at":"2018-01-15T22:14:05.000000Z",
+            "project":{
+              "domain":{
+                "id":"default",
+                "name":"Default"
+              },
+              "id":"231c62fb0fbd485b995e8b060c3f0d98",
+              "name":"demo"
+            },
+            "catalog":[
+              {
+                "endpoints":[
+                  {
+                    "region_id":"RegionOne",
+                    "url":"http://example.com/identity",
+                    "region":"RegionOne",
+                    "interface":"admin",
+                    "id":"81737f23cd8f45169fcd700cb658c8ad"
+                  },
+                  {
+                    "region_id":"RegionOne",
+                    "url":"http://example.com/identity",
+                    "region":"RegionOne",
+                    "interface":"public",
+                    "id":"a7b9155184ed4607853304408e7e8d32"
+                  }
+                ],
+                "type":"identity",
+                "id":"408af8b8554248fc8d686bef54ae3bf6",
+                "name":"keystone"
+              }
+            ],
+            "application_credential_restricted":true,
+            "user":{
+              "password_expires_at":null,
+              "domain":{
+                "id":"default",
+                "name":"Default"
+              },
+              "id":"fd786d56402c4d1691372e7dee0d00b5",
+              "name":"demo"
+            },
+            "audit_ids":[
+              "9JsolhssRzKfyayTIiCRUg"
+            ],
+            "issued_at":"2018-01-15T21:14:05.000000Z"
+          }
+        }
